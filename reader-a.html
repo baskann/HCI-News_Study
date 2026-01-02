@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article - Design A</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f2f5;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 12px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            color: #666;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: #e63946;
+        }
+
+        .share-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .share-btns button {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* Main Layout with Sidebar */
+        .main-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 24px;
+        }
+
+        /* Article Content */
+        .article-container {
+            background: white;
+            border-radius: 8px;
+            padding: 32px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .article-category {
+            display: inline-block;
+            background: #e63946;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .article-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a1a2e;
+            line-height: 1.3;
+            margin-bottom: 16px;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 20px;
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .article-body {
+            font-size: 17px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .article-body p {
+            margin-bottom: 20px;
+        }
+
+        /* Inline Ad */
+        .inline-ad {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            margin: 24px 0;
+            color: white;
+            font-size: 14px;
+        }
+
+        .inline-ad .ad-label {
+            font-size: 10px;
+            opacity: 0.7;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .inline-ad .ad-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .inline-ad .ad-cta {
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        /* Related Articles */
+        .related-section {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #eee;
+        }
+
+        .related-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .related-card {
+            cursor: pointer;
+        }
+
+        .related-card-image {
+            width: 100%;
+            height: 100px;
+            background: #ddd;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .related-card-title {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-widget {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-ad {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            text-align: center;
+            padding: 24px 16px;
+        }
+
+        .sidebar-ad .ad-label {
+            font-size: 10px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-ad .ad-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-ad .ad-cta {
+            display: inline-block;
+            background: white;
+            color: #28a745;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-top: 12px;
+            font-size: 13px;
+        }
+
+        .widget-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e63946;
+        }
+
+        .trending-item {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+
+        .trending-item:last-child {
+            border-bottom: none;
+        }
+
+        .trending-number {
+            font-size: 16px;
+            font-weight: 700;
+            color: #e63946;
+            width: 24px;
+        }
+
+        .trending-text {
+            font-size: 13px;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .ad-banner {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 13px;
+            border: 1px dashed #ccc;
+        }
+
+        /* Complete Button */
+        .complete-section {
+            margin-top: 32px;
+            text-align: center;
+        }
+
+        .complete-btn {
+            padding: 16px 48px;
+            font-size: 16px;
+            font-weight: 600;
+            background: #e63946;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .complete-btn:hover {
+            background: #d32f2f;
+        }
+
+        /* Timer (small, corner) */
+        .timer {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <!-- Timer -->
+    <div class="timer" id="timer">00:00</div>
+
+    <!-- Header -->
+    <header class="header">
+        <a href="feed-a.html" class="back-btn">← Back</a>
+        <div class="logo">NEWS</div>
+        <div class="share-btns">
+            <button>📤 Share</button>
+            <button>🔖 Save</button>
+        </div>
+    </header>
+
+    <!-- Main Content with Sidebar -->
+    <main class="main-container">
+        <!-- Article -->
+        <article class="article-container">
+            <span class="article-category">SPORTS</span>
+            <h1 class="article-title">Championship Race Heats Up in Premier League: Critical Week Begins</h1>
+
+            <div class="article-meta">
+                <span>📅 December 28, 2024</span>
+                <span>⏱️ 5 min read</span>
+                <span>👁️ 12.4K views</span>
+            </div>
+
+            <div class="article-body" id="articleBody">
+                <p>The championship race in the Premier League is becoming more exciting each week. The point differences between the teams at the top of the league remain very close, creating great tension as we approach the final weeks of the season.</p>
+
+                <p>Manchester City sits in the top spot with their consistent performance in recent weeks. The team has managed to stay ahead of their rivals, especially with victories in away matches. When asked "What is your goal?" at the press conference, the manager replied "The championship, of course. We can have no other goal."</p>
+
+                <!-- Inline Ad -->
+                <div class="inline-ad">
+                    <div class="ad-label">Advertisement</div>
+                    <div class="ad-title">Special Offer - 50% OFF</div>
+                    <div>Limited time offer on premium subscriptions</div>
+                    <div class="ad-cta">Shop Now</div>
+                </div>
+
+                <p>Liverpool is fighting to close the point gap with the leader. The team has improved their form with four wins in their last five matches. The performance of the attacking line is giving fans hope. The star striker has scored 15 goals so far this season, making him one of the strongest candidates in the golden boot race.</p>
+
+                <p>Arsenal also continues to be an important player in the championship race. The team stands out with their defensive solidity. Having conceded only three goals in their last ten matches, Arsenal maintains the title of the league's least-conceding team with this statistic.</p>
+
+                <p>The matches to be played this weekend will directly affect the course of the championship race. With derby excitement added, football fans can expect an exciting weekend. Weather experts announced that rain is expected on match day, which could affect the teams' game plans.</p>
+
+                <p>Teams at the bottom of the league are fighting to avoid relegation. The point differences between the bottom three teams are also very close, indicating that the excitement will continue until the end of the season.</p>
+
+                <p>Sports writers agree that this season is one of the most competitive championship races in recent years. According to a newspaper poll, 40 percent of fans see Manchester City as champions, 35 percent Liverpool, and 20 percent Arsenal.</p>
+            </div>
+
+            <!-- Related Articles -->
+            <div class="related-section">
+                <h3 class="related-title">Related News</h3>
+                <div class="related-grid">
+                    <div class="related-card" onclick="trackDistraction()">
+                        <div class="related-card-image">⚽</div>
+                        <div class="related-card-title">Transfer window heating up: Who's coming to the Premier League?</div>
+                    </div>
+                    <div class="related-card" onclick="trackDistraction()">
+                        <div class="related-card-image">🏆</div>
+                        <div class="related-card-title">English teams' status in European competitions</div>
+                    </div>
+                    <div class="related-card" onclick="trackDistraction()">
+                        <div class="related-card-image">📊</div>
+                        <div class="related-card-title">Team of the Season announced</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Complete Button -->
+            <div class="complete-section">
+                <button class="complete-btn" onclick="completeReading()">I've Finished Reading</button>
+            </div>
+        </article>
+
+        <!-- Sidebar - DISTRACTIONS -->
+        <aside class="sidebar">
+            <div class="sidebar-widget">
+                <h3 class="widget-title">Trending News</h3>
+                <div class="trending-item" onclick="trackDistraction()">
+                    <span class="trending-number">1</span>
+                    <span class="trending-text">Breaking transfer news!</span>
+                </div>
+                <div class="trending-item" onclick="trackDistraction()">
+                    <span class="trending-number">2</span>
+                    <span class="trending-text">Manager resigns from position</span>
+                </div>
+                <div class="trending-item" onclick="trackDistraction()">
+                    <span class="trending-number">3</span>
+                    <span class="trending-text">Injury shock for star player</span>
+                </div>
+            </div>
+
+            <div class="sidebar-widget sidebar-ad">
+                <div class="ad-label">Advertisement</div>
+                <div class="ad-title">WINTER SALE</div>
+                <div style="font-size: 32px; font-weight: 800;">30% OFF</div>
+                <div>On all premium items</div>
+                <div class="ad-cta">Shop Now</div>
+            </div>
+
+            <div class="sidebar-widget">
+                <h3 class="widget-title">Most Read</h3>
+                <div class="trending-item" onclick="trackDistraction()">
+                    <span class="trending-number">1</span>
+                    <span class="trending-text">Star player dropped from squad</span>
+                </div>
+                <div class="trending-item" onclick="trackDistraction()">
+                    <span class="trending-number">2</span>
+                    <span class="trending-text">Ticket prices announced</span>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <script src="tracking.js"></script>
+    <script>
+        // Article content database
+        var articles = {
+            sports: {
+                category: 'SPORTS',
+                categoryColor: '#e63946',
+                title: 'Championship Race Heats Up in Premier League: Critical Week Begins',
+                content: `
+                    <p>The championship race in the Premier League is becoming more exciting each week. The point differences between the teams at the top of the league remain very close, creating great tension as we approach the final weeks of the season.</p>
+
+                    <p>Manchester City sits in the top spot with their consistent performance in recent weeks. The team has managed to stay ahead of their rivals, especially with victories in away matches. When asked "What is your goal?" at the press conference, the manager replied "The championship, of course. We can have no other goal."</p>
+
+                    <div class="inline-ad"><div class="ad-label">Advertisement</div><div class="ad-title">Special Offer - 50% OFF</div><div>Limited time offer on premium subscriptions</div><div class="ad-cta">Shop Now</div></div>
+
+                    <p>Liverpool is fighting to close the point gap with the leader. The team has improved their form with four wins in their last five matches. The performance of the attacking line is giving fans hope. The star striker has scored 15 goals so far this season, making him one of the strongest candidates in the golden boot race.</p>
+
+                    <p>Arsenal also continues to be an important player in the championship race. The team stands out with their defensive solidity. Having conceded only three goals in their last ten matches, Arsenal maintains the title of the league's least-conceding team with this statistic.</p>
+
+                    <p>The matches to be played this weekend will directly affect the course of the championship race. With derby excitement added, football fans can expect an exciting weekend. Weather experts announced that rain is expected on match day, which could affect the teams' game plans.</p>
+
+                    <p>Teams at the bottom of the league are fighting to avoid relegation. The point differences between the bottom three teams are also very close, indicating that the excitement will continue until the end of the season.</p>
+
+                    <p>Sports writers agree that this season is one of the most competitive championship races in recent years. According to a newspaper poll, 40 percent of fans see Manchester City as champions, 35 percent Liverpool, and 20 percent Arsenal.</p>
+                `
+            },
+            technology: {
+                category: 'TECHNOLOGY',
+                categoryColor: '#4a90d9',
+                title: 'How Will AI Technologies Change Our Lives in 2025?',
+                content: `
+                    <p>Artificial intelligence technologies are becoming more present in every area of our lives in 2025. Experts predict that this year will be a turning point for AI, and fundamental changes are expected in many sectors.</p>
+
+                    <p>AI-powered diagnostic systems are becoming widespread in the healthcare sector. Particularly in image analysis, AI systems are helping doctors and playing an important role in early disease detection. According to research, AI-powered systems have achieved 94 percent accuracy in diagnosing certain types of cancer.</p>
+
+                    <div class="inline-ad"><div class="ad-label">Advertisement</div><div class="ad-title">Tech Conference 2025</div><div>Join industry leaders at the biggest tech event</div><div class="ad-cta">Register Now</div></div>
+
+                    <p>Major transformations are also occurring in education. Personalized learning platforms offer content suited to each student's learning pace and style. ChatGPT and similar language models help students with homework and research, but this is also raising concerns about academic integrity.</p>
+
+                    <p>Automation is accelerating in the business world. While repetitive tasks are being taken over by AI, employees are expected to focus on more creative and strategic work. However, some experts warn that this situation could lead to the disappearance of certain professions.</p>
+
+                    <p>AI security and ethical use are also becoming important topics. The European Union's AI regulation will come into force in 2025, bringing strict rules on how companies develop and use AI systems.</p>
+
+                    <p>AI investments are also increasing in the United States. Tech companies are developing projects especially in natural language processing and image recognition. The government announced its AI strategy for 2025 with a target of $10 billion in investment in this area.</p>
+
+                    <p>In conclusion, AI technologies will continue to be an integral part of our lives in 2025. The responsible and ethical use of these technologies is critically important for maximizing societal benefit.</p>
+                `
+            },
+            economy: {
+                category: 'ECONOMY',
+                categoryColor: '#28a745',
+                title: 'Federal Reserve Announces Interest Rate Decision: Markets Remain Cautious',
+                content: `
+                    <p>The Federal Reserve kept the policy interest rate unchanged at 5.25% at this month's Federal Open Market Committee meeting. While the decision largely aligned with market expectations, it was emphasized that the fight against inflation will continue.</p>
+
+                    <p>The Fed Chair, in his statement after the decision, said "The downward trend in inflation continues, but we will remain cautious to reach our targets." The Chair stated that the goal is for inflation to fall to the 2% target by the end of 2025.</p>
+
+                    <div class="inline-ad"><div class="ad-label">Advertisement</div><div class="ad-title">Investment Opportunities</div><div>Grow your wealth with expert guidance</div><div class="ad-cta">Learn More</div></div>
+
+                    <p>After the decision, the dollar index began trading at around 104 levels. Market analysts expect the index to move in the 103-105 range by year-end. However, geopolitical risks and uncertainties in the global economy could change these predictions.</p>
+
+                    <p>Business representatives stated that the high interest rate environment is negatively affecting companies' investment decisions. Small and medium enterprises particularly complain about high credit costs. The government announced it will reveal supportive measures on this issue.</p>
+
+                    <p>Interest rates continue to be decisive in the housing market. Mortgage rates remain above 7%, which has slowed home sales. Real estate sector representatives say it will be difficult for the market to revive without a rate cut.</p>
+
+                    <p>Gold prices continue to rise due to economic uncertainties. With gold trading above $2,000 per ounce, investors continue to turn to gold as a safe haven. Experts predict gold could reach $2,200 by year-end.</p>
+
+                    <p>In conclusion, while the economic outlook remains uncertain, the Federal Reserve's tight monetary policy stance will continue. Markets will closely follow inflation data in the coming months and developments in the global economy.</p>
+                `
+            },
+            culture: {
+                category: 'CULTURE',
+                categoryColor: '#9c27b0',
+                title: 'International Film Festival Kicks Off: This Year\'s Highlights',
+                content: `
+                    <p>The 44th International Film Festival opens its doors this year with a record number of films and events. The festival will be held from April 4-15 and will feature over 200 films from more than 50 countries.</p>
+
+                    <p>The festival director, while introducing this year's program, said "The cinema industry is recovering after the pandemic, and we are bringing the best examples of world cinema to this festival." The opening film will be the latest work from an award-winning director who won at Cannes.</p>
+
+                    <div class="inline-ad"><div class="ad-label">Advertisement</div><div class="ad-title">Arts & Culture Magazine</div><div>Subscribe for exclusive cultural content</div><div class="ad-cta">Subscribe</div></div>
+
+                    <p>Independent cinema forms an important part of the festival this year. 15 new films from emerging directors will be featured in the festival's national competition section. The jury will be chaired by an internationally recognized filmmaker.</p>
+
+                    <p>Talks and masterclasses to be held during the festival are also generating great interest. Oscar-winning directors and producers will share their experiences with young filmmakers. Tickets sold out on the first day of online sales.</p>
+
+                    <p>This year's festival theme is "Crossing Borders." Films dealing with immigration, identity, and cultural diversity are prominent. The documentary section features productions focusing on climate change and environmental issues.</p>
+
+                    <p>Historic theaters downtown will be the main venues of the festival. Screenings will be held in halls in different neighborhoods of the city, including the Grand Theater and the Art Cinema. Outdoor screenings are also on the program.</p>
+
+                    <p>The festival will also organize free screenings to bring cinema to wider audiences. Special discounted tickets for students and an animation selection for children strengthen the festival's social dimension.</p>
+                `
+            },
+            health: {
+                category: 'HEALTH',
+                categoryColor: '#ff5722',
+                title: '10 Ways to Boost Your Immune System During Winter',
+                content: `
+                    <p>Winter months are when illnesses like the common cold and flu become widespread. Experts recommend taking certain precautions to strengthen the immune system. Here are ways to stay healthy during winter.</p>
+
+                    <p>Nutrition forms the foundation of the immune system. Consumption of citrus fruits, kiwi, and red peppers rich in vitamin C is recommended. Since vitamin D deficiency becomes common in winter months, supplement use should be considered. Experts recommend consuming at least 5 portions of fruits and vegetables daily.</p>
+
+                    <div class="inline-ad"><div class="ad-label">Advertisement</div><div class="ad-title">Health & Wellness Products</div><div>Natural supplements for a healthier you</div><div class="ad-cta">Shop Now</div></div>
+
+                    <p>Regular exercise is one of the most important factors in strengthening the immune system. At least 150 minutes of moderate-intensity exercise per week is recommended. Yoga, pilates, or home exercises that can be done indoors are ideal options for winter months.</p>
+
+                    <p>Sleep quality is also critically important for immunity. Adults need 7-9 hours of sleep per day. Sleep irregularity negatively affects the function of immune cells and causes vulnerability to diseases.</p>
+
+                    <p>Stress management is a factor that should not be overlooked. Chronic stress weakens the immune system by raising cortisol levels. Meditation, deep breathing exercises, and hobby activities can help cope with stress.</p>
+
+                    <p>Hand hygiene is one of the most effective methods for preventing the spread of infections. Wash your hands with soap for at least 20 seconds and use hand sanitizer. Wearing a mask in public transportation and crowded environments can also be protective.</p>
+
+                    <p>Finally, don't forget to drink plenty of water. Although the feeling of thirst decreases in winter months, the body's need for fluids continues. It is recommended to consume at least 8 glasses of water or herbal tea daily. Don't neglect to get your seasonal vaccinations after consulting your doctor.</p>
+                `
+            },
+            politics: {
+                category: 'POLITICS',
+                categoryColor: '#795548',
+                title: 'New Legislative Session Begins in Congress: Key Issues on the Agenda',
+                content: `
+                    <p>A new legislative session is beginning in Congress. During this period, many important topics from economy to education, from healthcare to social policies will be on the agenda. Representatives are preparing for an intense work schedule.</p>
+
+                    <p>One of the most important agenda items of the new term will be tax reform. The administration has prepared a bill that envisions fundamental changes in the tax system. The bill includes restructuring income tax brackets and some changes in corporate tax.</p>
+
+                    <div class="inline-ad"><div class="ad-label">Advertisement</div><div class="ad-title">Civic Engagement Matters</div><div>Stay informed, make your voice heard</div><div class="ad-cta">Get Involved</div></div>
+
+                    <p>Important regulations are also expected in education. The Education Department's curriculum change proposal will come to the congressional agenda. The new curriculum aims to make digital literacy and artificial intelligence education mandatory.</p>
+
+                    <p>Changes to be made in the social security system are also on the agenda. New regulations regarding retirement age and premium days will be discussed. Opposition parties announced they will criticize the government on this issue and present alternative proposals.</p>
+
+                    <p>A bill proposing changes to local government laws is also among Congress's priority agenda items. This bill, which restructures the powers of mayors, contains controversial provisions. Changes are proposed regarding the boundaries and authorities of metropolitan municipalities.</p>
+
+                    <p>Foreign policy issues will also occupy an important place on the congressional agenda. Relations with allied nations, agreements made with neighboring countries, and America's position in international organizations will be evaluated.</p>
+
+                    <p>The Speaker of the House, emphasizing the importance of reconciliation and dialogue in the new term, said "I believe we will have a productive legislative term that will meet the expectations of our nation." Forty-five representatives applied to speak at the first session.</p>
+                `
+            }
+        };
+
+        // Load the correct article based on selected topic
+        var selectedTopic = sessionStorage.getItem('selectedTopic') || 'sports';
+        var article = articles[selectedTopic] || articles.sports;
+
+        // Update page content
+        document.querySelector('.article-category').textContent = article.category;
+        document.querySelector('.article-category').style.background = article.categoryColor;
+        document.querySelector('.article-title').textContent = article.title;
+        document.getElementById('articleBody').innerHTML = article.content;
+
+        // Store the topic for survey
+        sessionStorage.setItem('articleTopic', selectedTopic);
+
+        var startTime = Date.now();
+        var startTimeISO = new Date().toISOString();
+        var maxScroll = 0;
+        var distractionClicks = parseInt(sessionStorage.getItem('distractionClicks') || '0');
+
+        // Timer
+        function updateTimer() {
+            var elapsed = Math.floor((Date.now() - startTime) / 1000);
+            var mins = Math.floor(elapsed / 60);
+            var secs = elapsed % 60;
+            document.getElementById('timer').textContent =
+                String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+        }
+        setInterval(updateTimer, 1000);
+
+        // Scroll tracking
+        window.addEventListener('scroll', function() {
+            var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            var scrollPercent = Math.round((scrollTop / docHeight) * 100);
+            if (scrollPercent > maxScroll) {
+                maxScroll = scrollPercent;
+            }
+        });
+
+        // Track distraction clicks
+        function trackDistraction() {
+            distractionClicks++;
+            sessionStorage.setItem('distractionClicks', distractionClicks);
+        }
+
+        // Complete reading
+        function completeReading() {
+            var readingTime = Math.floor((Date.now() - startTime) / 1000);
+
+            // Store session data
+            var sessionData = {
+                uiVersion: 'A',
+                articleId: selectedTopic,
+                articleTopic: article.category,
+                startTime: startTimeISO,
+                endTime: new Date().toISOString(),
+                readingTimeSec: readingTime,
+                maxScrollDepth: maxScroll,
+                distractionClicks: distractionClicks,
+                focusModeUsed: false,
+                focusModeTimeSec: 0,
+                completedAt: new Date().toISOString()
+            };
+
+            sessionStorage.setItem('lastSession', JSON.stringify(sessionData));
+            location.href = 'survey.html';
+        }
+    </script>
+</body>
+</html>

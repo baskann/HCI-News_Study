@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scenario Start</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .scenario-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .scenario-card {
+            background: white;
+            border-radius: 12px;
+            padding: 48px;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .scenario-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .scenario-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 16px;
+        }
+
+        .scenario-desc {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .task-list {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 24px;
+            text-align: left;
+            margin-bottom: 32px;
+        }
+
+        .task-list h4 {
+            margin-bottom: 16px;
+            color: #1a1a2e;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            color: #555;
+        }
+
+        .task-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .task-number {
+            width: 28px;
+            height: 28px;
+            background: #4a90d9;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .btn-start {
+            width: 100%;
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .ui-badge {
+            display: inline-block;
+            background: #e8f4fd;
+            color: #1976d2;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="scenario-container">
+        <div class="scenario-card">
+            <div class="scenario-number" id="scenarioLabel">Scenario 1/2</div>
+            <h1 class="scenario-title">Start Task</h1>
+            <p class="scenario-desc" id="scenarioDesc">
+                Now you will browse a news website and read an article that interests you.
+            </p>
+
+            <div class="task-list">
+                <h4>What you need to do:</h4>
+                <div class="task-item">
+                    <span class="task-number">1</span>
+                    <span>Select a news article that interests you from the list</span>
+                </div>
+                <div class="task-item">
+                    <span class="task-number">2</span>
+                    <span>Read the article carefully</span>
+                </div>
+                <div class="task-item">
+                    <span class="task-number">3</span>
+                    <span>Complete the short survey when you finish reading</span>
+                </div>
+            </div>
+
+            <button class="btn-start" id="startBtn" onclick="startScenario()">
+                Start
+            </button>
+
+            <div class="ui-badge" id="uiBadge">Design A</div>
+        </div>
+    </div>
+
+    <script>
+        var profile = JSON.parse(sessionStorage.getItem('participantProfile') || '{}');
+        var currentScenario = parseInt(sessionStorage.getItem('currentScenario') || '1');
+        var conditionOrder = profile.conditionOrder || 'AB';
+
+        // Determine which UI to show based on scenario and condition order
+        function getCurrentUI() {
+            if (currentScenario === 1) {
+                return conditionOrder === 'AB' ? 'A' : 'B';
+            } else {
+                return conditionOrder === 'AB' ? 'B' : 'A';
+            }
+        }
+
+        // Update UI
+        document.getElementById('scenarioLabel').textContent = 'Scenario ' + currentScenario + '/2';
+
+        var currentUI = getCurrentUI();
+        document.getElementById('uiBadge').textContent = 'Design ' + currentUI;
+
+        if (currentScenario === 2) {
+            document.getElementById('scenarioDesc').textContent = 'Now you will read news on a different design. Repeat the same task.';
+        }
+
+        function startScenario() {
+            // Store current UI and start time
+            sessionStorage.setItem('currentUI', currentUI);
+            sessionStorage.setItem('scenarioStartTime', new Date().toISOString());
+
+            // Navigate to appropriate feed
+            if (currentUI === 'A') {
+                location.href = 'feed-a.html';
+            } else {
+                location.href = 'feed-b.html';
+            }
+        }
+    </script>
+</body>
+</html>

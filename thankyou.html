@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You!</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .thankyou-container {
+            background: white;
+            border-radius: 16px;
+            padding: 48px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 40px;
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .thankyou-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 16px;
+        }
+
+        .thankyou-text {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .completion-code {
+            background: #f8f9fa;
+            border: 2px dashed #4a90d9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 32px;
+        }
+
+        .code-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .code-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4a90d9;
+            font-family: monospace;
+            letter-spacing: 2px;
+        }
+
+        .copy-btn {
+            margin-top: 12px;
+            padding: 8px 16px;
+            background: #4a90d9;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .copy-btn:hover {
+            background: #357abd;
+        }
+
+        .summary-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+
+        .summary-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 12px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            color: #666;
+        }
+
+        .summary-value {
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #4a90d9;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #357abd;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: fall 3s ease-in-out forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="thankyou-container">
+        <div class="success-icon">✓</div>
+        <h1 class="thankyou-title">Thank You!</h1>
+        <p class="thankyou-text">
+            You have successfully completed the study. Your participation is very valuable to us.
+        </p>
+
+        <div class="completion-code">
+            <div class="code-label">Completion Code</div>
+            <div class="code-value" id="completionCode">HCI-XXXX</div>
+            <button class="copy-btn" onclick="copyCode()">Copy</button>
+        </div>
+
+        <div class="summary-section">
+            <div class="summary-title">Summary</div>
+            <div class="summary-row">
+                <span class="summary-label">Participant ID</span>
+                <span class="summary-value" id="summaryParticipant">-</span>
+            </div>
+            <div class="summary-row">
+                <span class="summary-label">Completed Scenarios</span>
+                <span class="summary-value">2/2</span>
+            </div>
+            <div class="summary-row">
+                <span class="summary-label">Test Order</span>
+                <span class="summary-value" id="summaryOrder">-</span>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-secondary" onclick="location.href='results.html'">
+                View Results
+            </button>
+            <button class="btn btn-primary" onclick="location.href='landing.html'">
+                New Test
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Generate completion code
+        var profile = JSON.parse(sessionStorage.getItem('participantProfile') || '{}');
+        var code = 'HCI-' + (profile.participantId || 'XXXX').slice(-4).toUpperCase();
+        document.getElementById('completionCode').textContent = code;
+        document.getElementById('summaryParticipant').textContent = profile.participantId || '-';
+        document.getElementById('summaryOrder').textContent = profile.conditionOrder || '-';
+
+        // Copy code function
+        function copyCode() {
+            var code = document.getElementById('completionCode').textContent;
+            navigator.clipboard.writeText(code).then(function() {
+                alert('Code copied: ' + code);
+            });
+        }
+
+        // Confetti animation
+        function createConfetti() {
+            var colors = ['#667eea', '#764ba2', '#28a745', '#ffc107', '#e63946'];
+            for (var i = 0; i < 50; i++) {
+                var confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = -10 + 'px';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(confetti);
+
+                // Remove after animation
+                setTimeout(function() {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+
+        // Run confetti on load
+        createConfetti();
+
+        // Clear session data
+        sessionStorage.removeItem('currentScenario');
+        sessionStorage.removeItem('lastSession');
+        sessionStorage.removeItem('currentUI');
+    </script>
+</body>
+</html>

@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .survey-container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .survey-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .survey-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+        }
+
+        .survey-subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Question Section */
+        .question-section {
+            margin-bottom: 32px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .question-section:last-of-type {
+            border-bottom: none;
+        }
+
+        .question-number {
+            display: inline-block;
+            background: #4a90d9;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .question-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        /* MCQ Options */
+        .mcq-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .mcq-option {
+            position: relative;
+        }
+
+        .mcq-option input {
+            display: none;
+        }
+
+        .mcq-option label {
+            display: block;
+            padding: 14px 16px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 15px;
+        }
+
+        .mcq-option input:checked + label {
+            background: #e8f4fd;
+            border-color: #4a90d9;
+            color: #1976d2;
+        }
+
+        .mcq-option label:hover {
+            border-color: #4a90d9;
+        }
+
+        /* Likert Scale */
+        .likert-container {
+            margin-top: 8px;
+        }
+
+        .likert-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .likert-scale {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .likert-option {
+            flex: 1;
+            text-align: center;
+        }
+
+        .likert-option input {
+            display: none;
+        }
+
+        .likert-option label {
+            display: block;
+            padding: 12px 8px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .likert-option input:checked + label {
+            background: #4a90d9;
+            border-color: #4a90d9;
+            color: white;
+        }
+
+        .likert-option label:hover {
+            border-color: #4a90d9;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            background: #4a90d9;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 16px;
+        }
+
+        .submit-btn:hover {
+            background: #357abd;
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Reading Stats */
+        .reading-stats {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #4a90d9;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="survey-container">
+        <div class="survey-header">
+            <h1 class="survey-title">Reading Assessment</h1>
+            <p class="survey-subtitle">Please answer the following questions</p>
+        </div>
+
+        <!-- Reading Stats Summary -->
+        <div class="reading-stats">
+            <div class="stat-item">
+                <span class="stat-value" id="statTime">--:--</span>
+                <span class="stat-label">Reading Time</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" id="statScroll">--%</span>
+                <span class="stat-label">Scroll</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" id="statUI">-</span>
+                <span class="stat-label">Design</span>
+            </div>
+        </div>
+
+        <form id="surveyForm">
+            <!-- MCQ Question - Dynamic based on topic -->
+            <div class="question-section">
+                <span class="question-number">1</span>
+                <p class="question-text" id="mcqQuestion">According to the article, which is correct?</p>
+                <div class="mcq-options" id="mcqOptions">
+                    <!-- Will be filled dynamically by JS -->
+                </div>
+            </div>
+
+            <!-- Likert: Perceived Focus -->
+            <div class="question-section">
+                <span class="question-number">2</span>
+                <p class="question-text">How well were you able to focus while reading?</p>
+                <div class="likert-container">
+                    <div class="likert-labels">
+                        <span>Could not focus at all</span>
+                        <span>Focused very well</span>
+                    </div>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" name="focus" id="focus1" value="1" required>
+                            <label for="focus1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="focus" id="focus2" value="2">
+                            <label for="focus2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="focus" id="focus3" value="3">
+                            <label for="focus3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="focus" id="focus4" value="4">
+                            <label for="focus4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="focus" id="focus5" value="5">
+                            <label for="focus5">5</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="focus" id="focus6" value="6">
+                            <label for="focus6">6</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="focus" id="focus7" value="7">
+                            <label for="focus7">7</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Likert: Perceived Readability -->
+            <div class="question-section">
+                <span class="question-number">3</span>
+                <p class="question-text">How easy was it to read the text?</p>
+                <div class="likert-container">
+                    <div class="likert-labels">
+                        <span>Very difficult</span>
+                        <span>Very easy</span>
+                    </div>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" name="readability" id="read1" value="1" required>
+                            <label for="read1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="readability" id="read2" value="2">
+                            <label for="read2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="readability" id="read3" value="3">
+                            <label for="read3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="readability" id="read4" value="4">
+                            <label for="read4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="readability" id="read5" value="5">
+                            <label for="read5">5</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="readability" id="read6" value="6">
+                            <label for="read6">6</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="readability" id="read7" value="7">
+                            <label for="read7">7</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Submit</button>
+        </form>
+    </div>
+
+    <script src="tracking.js"></script>
+    <script>
+        // Topic-specific MCQ questions
+        var mcqQuestions = {
+            sports: {
+                question: 'According to the article, which is correct?',
+                options: [
+                    { id: 'mcq1', value: 'wrong1', label: 'Arsenal is currently in the top position' },
+                    { id: 'mcq2', value: 'correct', label: 'Manchester City is leading and successful in away matches' },
+                    { id: 'mcq3', value: 'wrong2', label: 'Liverpool won five games in their last five matches' },
+                    { id: 'mcq4', value: 'wrong3', label: 'Manchester City has the least goals conceded in the league' }
+                ]
+            },
+            technology: {
+                question: 'According to the article, which is correct about AI?',
+                options: [
+                    { id: 'mcq1', value: 'wrong1', label: 'AI achieved 50% accuracy in cancer diagnosis' },
+                    { id: 'mcq2', value: 'wrong2', label: 'EU AI regulation will come into force in 2030' },
+                    { id: 'mcq3', value: 'correct', label: 'AI achieved 94% accuracy in diagnosing certain types of cancer' },
+                    { id: 'mcq4', value: 'wrong3', label: 'The government targets $1 billion investment in AI' }
+                ]
+            },
+            economy: {
+                question: 'According to the article, which is correct about the economy?',
+                options: [
+                    { id: 'mcq1', value: 'wrong1', label: 'The Federal Reserve lowered interest rates' },
+                    { id: 'mcq2', value: 'correct', label: 'The policy interest rate was kept at 5.25%' },
+                    { id: 'mcq3', value: 'wrong2', label: 'The dollar index is trading at around 110 levels' },
+                    { id: 'mcq4', value: 'wrong3', label: 'Gold is trading below $1,500 per ounce' }
+                ]
+            },
+            culture: {
+                question: 'According to the article, which is correct about the Film Festival?',
+                options: [
+                    { id: 'mcq1', value: 'wrong1', label: 'The festival will be held from March 1-10' },
+                    { id: 'mcq2', value: 'wrong2', label: 'Only local films will be shown' },
+                    { id: 'mcq3', value: 'wrong3', label: 'The festival theme is "New Beginnings"' },
+                    { id: 'mcq4', value: 'correct', label: 'Over 200 films from more than 50 countries will be shown' }
+                ]
+            },
+            health: {
+                question: 'According to the article, which is correct about the immune system?',
+                options: [
+                    { id: 'mcq1', value: 'wrong1', label: '50 minutes of exercise per week is sufficient' },
+                    { id: 'mcq2', value: 'wrong2', label: 'Adults should sleep 5-6 hours per day' },
+                    { id: 'mcq3', value: 'correct', label: 'At least 150 minutes of moderate exercise per week is recommended' },
+                    { id: 'mcq4', value: 'wrong3', label: 'Vitamin D is unnecessary during winter months' }
+                ]
+            },
+            politics: {
+                question: 'According to the article, which is correct about the congressional agenda?',
+                options: [
+                    { id: 'mcq1', value: 'wrong1', label: 'No changes to the social security system are planned' },
+                    { id: 'mcq2', value: 'correct', label: '45 representatives applied to speak at the first session' },
+                    { id: 'mcq3', value: 'wrong2', label: 'No changes will be made to the education curriculum' },
+                    { id: 'mcq4', value: 'wrong3', label: 'Tax reform was left off the agenda' }
+                ]
+            }
+        };
+
+        // Load last session data
+        var lastSession = JSON.parse(sessionStorage.getItem('lastSession') || '{}');
+        var profile = JSON.parse(sessionStorage.getItem('participantProfile') || '{}');
+        var currentScenario = parseInt(sessionStorage.getItem('currentScenario') || '1');
+        var articleTopic = sessionStorage.getItem('articleTopic') || 'sports';
+
+        // Load topic-specific MCQ
+        var mcq = mcqQuestions[articleTopic] || mcqQuestions.sports;
+        document.getElementById('mcqQuestion').textContent = mcq.question;
+
+        var mcqOptionsHtml = '';
+        mcq.options.forEach(function(opt) {
+            mcqOptionsHtml += '<div class="mcq-option">';
+            mcqOptionsHtml += '<input type="radio" name="mcq" id="' + opt.id + '" value="' + opt.value + '" required>';
+            mcqOptionsHtml += '<label for="' + opt.id + '">' + opt.label + '</label>';
+            mcqOptionsHtml += '</div>';
+        });
+        document.getElementById('mcqOptions').innerHTML = mcqOptionsHtml;
+
+        // Display stats
+        function formatTime(secs) {
+            var m = Math.floor(secs / 60);
+            var s = secs % 60;
+            return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+        }
+
+        document.getElementById('statTime').textContent = formatTime(lastSession.readingTimeSec || 0);
+        document.getElementById('statScroll').textContent = '%' + (lastSession.maxScrollDepth || 0);
+        document.getElementById('statUI').textContent = lastSession.uiVersion || '-';
+
+        // Form submission
+        document.getElementById('surveyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var formData = new FormData(this);
+            var mcqAnswer = formData.get('mcq');
+            var focusRating = parseInt(formData.get('focus'));
+            var readabilityRating = parseInt(formData.get('readability'));
+
+            // Combine all data
+            var sessionRecord = {
+                sessionId: 'ses_' + Date.now().toString(36),
+                participantId: profile.participantId || 'unknown',
+                uiVersion: lastSession.uiVersion,
+                scenarioId: 'S' + currentScenario,
+                readingTimeSec: lastSession.readingTimeSec,
+                maxScrollDepth: lastSession.maxScrollDepth,
+                distractionClicks: lastSession.distractionClicks || 0,
+                focusModeUsed: lastSession.focusModeUsed || false,
+                focusModeTimeSec: lastSession.focusModeTimeSec || 0,
+                comprehensionScore: mcqAnswer === 'correct' ? 1 : 0,
+                perceivedFocus: focusRating,
+                perceivedReadability: readabilityRating,
+                completedAt: new Date().toISOString()
+            };
+
+            // Function to navigate after save
+            function navigateNext() {
+                if (currentScenario < 2) {
+                    sessionStorage.setItem('currentScenario', '2');
+                    location.href = 'scenario.html';
+                } else {
+                    location.href = 'thankyou.html';
+                }
+            }
+
+            // Save to Firebase and wait for completion
+            if (typeof saveResult === 'function' && typeof firebaseReady !== 'undefined' && firebaseReady && typeof database !== 'undefined') {
+                // Save to Firebase with promise
+                var resultsRef = database.ref('results');
+                resultsRef.push().set(sessionRecord)
+                    .then(function() {
+                        console.log('Data saved to Firebase successfully');
+                        navigateNext();
+                    })
+                    .catch(function(err) {
+                        console.warn('Firebase save failed:', err);
+                        // Still navigate even if Firebase fails
+                        navigateNext();
+                    });
+            } else {
+                // No Firebase, save to localStorage only
+                var allSessions = JSON.parse(localStorage.getItem('hci_study_results') || '[]');
+                allSessions.push(sessionRecord);
+                localStorage.setItem('hci_study_results', JSON.stringify(allSessions));
+                navigateNext();
+            }
+        });
+    </script>
+</body>
+</html>

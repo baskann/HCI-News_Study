@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Participant Profile</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .profile-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .step-indicator {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .profile-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .profile-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 32px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .radio-option, .checkbox-option {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .radio-option input, .checkbox-option input {
+            display: none;
+        }
+
+        .radio-option label, .checkbox-option label {
+            display: block;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .radio-option input:checked + label,
+        .checkbox-option input:checked + label {
+            background: #e8f4fd;
+            border-color: #4a90d9;
+            color: #1976d2;
+        }
+
+        .radio-option label:hover,
+        .checkbox-option label:hover {
+            border-color: #4a90d9;
+        }
+
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .topic-option {
+            position: relative;
+        }
+
+        .topic-option input {
+            display: none;
+        }
+
+        .topic-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px 12px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .topic-option input:checked + label {
+            background: #e8f4fd;
+            border-color: #4a90d9;
+        }
+
+        .topic-option label:hover {
+            border-color: #4a90d9;
+        }
+
+        .topic-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .topic-name {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .btn-back {
+            flex: 1;
+            padding: 14px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            background: #f0f0f0;
+            color: #666;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-next {
+            flex: 2;
+            padding: 14px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            background: #4a90d9;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-next:hover {
+            background: #357abd;
+        }
+
+        .helper-text {
+            font-size: 12px;
+            color: #999;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="step-indicator">Step 2/3</div>
+            <h1 class="profile-title">Participant Profile</h1>
+            <p class="profile-subtitle">Please fill in the information below</p>
+
+            <form id="profileForm">
+                <!-- Age Group -->
+                <div class="form-group">
+                    <label class="form-label">Age Group</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" name="ageGroup" id="age18" value="18-24" required>
+                            <label for="age18">18-24</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="ageGroup" id="age25" value="25-34">
+                            <label for="age25">25-34</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="ageGroup" id="age35" value="35+">
+                            <label for="age35">35+</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gender -->
+                <div class="form-group">
+                    <label class="form-label">Gender</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" name="gender" id="genderF" value="female" required>
+                            <label for="genderF">Female</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="gender" id="genderM" value="male">
+                            <label for="genderM">Male</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="gender" id="genderO" value="prefer_not_to_say">
+                            <label for="genderO">Prefer not to say</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Department/Major -->
+                <div class="form-group">
+                    <label class="form-label">Department / Major</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" name="department" id="deptEng" value="engineering" required>
+                            <label for="deptEng">Engineering</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="department" id="deptScience" value="science">
+                            <label for="deptScience">Science</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="department" id="deptBusiness" value="business">
+                            <label for="deptBusiness">Business</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="department" id="deptArts" value="arts_humanities">
+                            <label for="deptArts">Arts & Humanities</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="department" id="deptOther" value="other">
+                            <label for="deptOther">Other</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Occupation -->
+                <div class="form-group">
+                    <label class="form-label">Occupation</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" name="occupation" id="occStudent" value="student" required>
+                            <label for="occStudent">Student</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="occupation" id="occWorking" value="working">
+                            <label for="occWorking">Working</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="occupation" id="occOther" value="other">
+                            <label for="occOther">Other</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- News Frequency -->
+                <div class="form-group">
+                    <label class="form-label">How often do you read news?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" name="newsFreq" id="freqDaily" value="daily" required>
+                            <label for="freqDaily">Daily</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="newsFreq" id="freqWeekly" value="weekly">
+                            <label for="freqWeekly">Weekly</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="newsFreq" id="freqRarely" value="rarely">
+                            <label for="freqRarely">Rarely</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reading Style -->
+                <div class="form-group">
+                    <label class="form-label">Reading Style</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" name="readStyle" id="styleSkim" value="skim" required>
+                            <label for="styleSkim">Skim through</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="readStyle" id="styleDeep" value="detailed">
+                            <label for="styleDeep">Read in detail</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="readStyle" id="styleMix" value="mixed">
+                            <label for="styleMix">Mixed</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Topic Interests -->
+                <div class="form-group">
+                    <label class="form-label">Top 2 Topics of Interest</label>
+                    <p class="helper-text">You can select up to 2 topics</p>
+                    <div class="topic-grid">
+                        <div class="topic-option">
+                            <input type="checkbox" name="topics" id="topicSport" value="sports">
+                            <label for="topicSport">
+                                <span class="topic-icon">⚽</span>
+                                <span class="topic-name">Sports</span>
+                            </label>
+                        </div>
+                        <div class="topic-option">
+                            <input type="checkbox" name="topics" id="topicTech" value="technology">
+                            <label for="topicTech">
+                                <span class="topic-icon">💻</span>
+                                <span class="topic-name">Technology</span>
+                            </label>
+                        </div>
+                        <div class="topic-option">
+                            <input type="checkbox" name="topics" id="topicEcon" value="economy">
+                            <label for="topicEcon">
+                                <span class="topic-icon">📈</span>
+                                <span class="topic-name">Economy</span>
+                            </label>
+                        </div>
+                        <div class="topic-option">
+                            <input type="checkbox" name="topics" id="topicPolitics" value="politics">
+                            <label for="topicPolitics">
+                                <span class="topic-icon">🏛️</span>
+                                <span class="topic-name">Politics</span>
+                            </label>
+                        </div>
+                        <div class="topic-option">
+                            <input type="checkbox" name="topics" id="topicCulture" value="culture">
+                            <label for="topicCulture">
+                                <span class="topic-icon">🎭</span>
+                                <span class="topic-name">Culture</span>
+                            </label>
+                        </div>
+                        <div class="topic-option">
+                            <input type="checkbox" name="topics" id="topicHealth" value="health">
+                            <label for="topicHealth">
+                                <span class="topic-icon">🏥</span>
+                                <span class="topic-name">Health</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-row">
+                    <button type="button" class="btn-back" onclick="location.href='consent.html'">Back</button>
+                    <button type="submit" class="btn-next">Continue</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="tracking.js"></script>
+    <script>
+        // Limit topic selection to 2
+        var topicCheckboxes = document.querySelectorAll('input[name="topics"]');
+        topicCheckboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                var checked = document.querySelectorAll('input[name="topics"]:checked');
+                if (checked.length > 2) {
+                    this.checked = false;
+                    alert('You can select up to 2 topics');
+                }
+            });
+        });
+
+        // Form submission
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Validate topic selection
+            var checkedTopics = document.querySelectorAll('input[name="topics"]:checked');
+            if (checkedTopics.length < 1) {
+                alert('Please select at least 1 topic of interest');
+                return;
+            }
+
+            // Collect form data
+            var formData = new FormData(this);
+            var profile = {
+                participantId: 'P' + Date.now().toString().slice(-6),
+                ageGroup: formData.get('ageGroup'),
+                gender: formData.get('gender'),
+                department: formData.get('department'),
+                occupation: formData.get('occupation'),
+                newsFrequency: formData.get('newsFreq'),
+                readingStyle: formData.get('readStyle'),
+                topicInterests: Array.from(checkedTopics).map(function(cb) { return cb.value; }),
+                conditionOrder: 'AB', // Always A first, then B
+                timestamp: new Date().toISOString()
+            };
+
+            // Store profile
+            sessionStorage.setItem('participantProfile', JSON.stringify(profile));
+
+            // Go to scenario page
+            location.href = 'scenario.html';
+        });
+    </script>
+</body>
+</html>

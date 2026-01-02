@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Reading Study</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .landing-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .landing-card {
+            background: white;
+            border-radius: 16px;
+            padding: 48px;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .landing-icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+        }
+
+        .landing-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 16px;
+        }
+
+        .landing-subtitle {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .landing-info {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        .landing-info h4 {
+            margin-bottom: 12px;
+            color: #1a1a2e;
+        }
+
+        .landing-info ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #555;
+        }
+
+        .landing-info li {
+            margin-bottom: 8px;
+        }
+
+        .time-estimate {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #e8f4fd;
+            color: #1976d2;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .start-btn {
+            width: 100%;
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-container">
+        <div class="landing-card">
+            <div class="landing-icon">📰</div>
+            <h1 class="landing-title">News Reading Study</h1>
+            <p class="landing-subtitle">
+                In this study, you will experience two different news website designs and answer brief questions about each.
+            </p>
+
+            <div class="time-estimate">
+                <span>⏱</span>
+                <span>Estimated time: 5-8 minutes</span>
+            </div>
+
+            <div class="landing-info">
+                <h4>What will you do?</h4>
+                <ul>
+                    <li>Fill out a brief profile form</li>
+                    <li>Read news on 2 different designs</li>
+                    <li>Complete a short survey after each reading</li>
+                </ul>
+            </div>
+
+            <button class="start-btn" onclick="location.href='consent.html'">
+                Start
+            </button>
+        </div>
+    </div>
+</body>
+</html>

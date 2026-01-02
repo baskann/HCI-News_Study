@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article - Design B</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 12px 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 700px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            color: #666;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .timer {
+            background: #e8f5e9;
+            color: #28a745;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .focus-btn {
+            padding: 8px 16px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .focus-btn:hover {
+            background: #218838;
+        }
+
+        .focus-btn.active {
+            background: #dc3545;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: #e9ecef;
+            height: 4px;
+            position: sticky;
+            top: 52px;
+            z-index: 99;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        .progress-text {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #28a745;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Main Container - Single Column, Clean */
+        .main-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 24px 20px;
+        }
+
+        /* Article */
+        .article-container {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        /* Reading Info */
+        .reading-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding: 12px 16px;
+            background: #f0f9f0;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #28a745;
+        }
+
+        .article-category {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #28a745;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .article-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a2e;
+            line-height: 1.35;
+            margin-bottom: 16px;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 20px;
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        /* Summary Box */
+        .summary-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 28px;
+        }
+
+        .summary-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #2e7d32;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .summary-list {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .summary-list li {
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        /* Section Markers */
+        .section-marker {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 32px 0 20px;
+            color: #999;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-marker::before,
+        .section-marker::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        /* Article Body */
+        .article-body {
+            font-size: 18px;
+            line-height: 1.9;
+            color: #333;
+        }
+
+        .article-body p {
+            margin-bottom: 24px;
+            transition: background 0.2s;
+        }
+
+        .article-body p:hover {
+            background: rgba(40, 167, 69, 0.05);
+            border-radius: 4px;
+            margin-left: -8px;
+            margin-right: -8px;
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 32px 0;
+        }
+
+        .scroll-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            transition: background 0.3s;
+        }
+
+        .scroll-dot.active {
+            background: #28a745;
+        }
+
+        /* Text Controls */
+        .text-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-label {
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .size-btn {
+            width: 36px;
+            height: 36px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .size-btn:hover {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        .line-btn {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .line-btn:hover {
+            border-color: #28a745;
+        }
+
+        .line-btn.active {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        /* Complete Button */
+        .complete-section {
+            text-align: center;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #eee;
+        }
+
+        .complete-btn {
+            padding: 16px 48px;
+            font-size: 16px;
+            font-weight: 600;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .complete-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        /* Focus Mode Overlay */
+        .focus-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 50;
+        }
+
+        .focus-overlay.active {
+            display: block;
+        }
+
+        body.focus-mode .article-container {
+            position: relative;
+            z-index: 60;
+        }
+
+        body.focus-mode .header {
+            z-index: 70;
+        }
+
+        /* Motivation Popup */
+        .motivation-popup {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(40, 167, 69, 0.4);
+            z-index: 200;
+            animation: slideUp 0.3s ease;
+        }
+
+        .motivation-popup.show {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Focus Mode Overlay -->
+    <div class="focus-overlay" id="focusOverlay"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="feed-b.html" class="back-btn">← Back</a>
+            <div class="timer" id="timer">00:00</div>
+            <button class="focus-btn" id="focusBtn" onclick="toggleFocusMode()">
+                <span>🎯</span>
+                <span id="focusBtnText">Focus Mode</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="progress-text" id="progressText">%0</div>
+
+    <!-- Main Content - Single Column, Clean -->
+    <main class="main-container">
+        <article class="article-container">
+            <!-- Reading Info -->
+            <div class="reading-info">
+                <span>📖 Estimated reading time: 5 minutes</span>
+            </div>
+
+            <span class="article-category">SPORTS</span>
+            <h1 class="article-title">Championship Race Heats Up in Premier League: Critical Week Begins</h1>
+
+            <div class="article-meta">
+                <span>December 28, 2024</span>
+                <span>•</span>
+                <span>5 min read</span>
+            </div>
+
+            <!-- Summary Box -->
+            <div class="summary-box">
+                <div class="summary-title">
+                    <span>📌</span>
+                    <span>Summary</span>
+                </div>
+                <ul class="summary-list">
+                    <li>Manchester City leads, Liverpool in pursuit</li>
+                    <li>Derby excitement awaits this weekend</li>
+                    <li>Championship race may continue until final weeks</li>
+                </ul>
+            </div>
+
+            <!-- Text Controls -->
+            <div class="text-controls">
+                <div class="control-group">
+                    <span class="control-label">Text Size:</span>
+                    <button class="size-btn" onclick="changeTextSize(-2)">A-</button>
+                    <button class="size-btn" onclick="changeTextSize(2)">A+</button>
+                </div>
+                <div class="control-group">
+                    <span class="control-label">Line Spacing:</span>
+                    <button class="line-btn" onclick="changeLineHeight(1.6)">Tight</button>
+                    <button class="line-btn active" onclick="changeLineHeight(1.9)">Normal</button>
+                    <button class="line-btn" onclick="changeLineHeight(2.2)">Wide</button>
+                </div>
+            </div>
+
+            <div class="article-body" id="articleBody">
+                <div class="section-marker">Introduction</div>
+
+                <p>The championship race in the Premier League is becoming more exciting each week. The point differences between the teams at the top of the league remain very close, creating great tension as we approach the final weeks of the season.</p>
+
+                <p>Manchester City sits in the top spot with their consistent performance in recent weeks. The team has managed to stay ahead of their rivals, especially with victories in away matches. When asked "What is your goal?" at the press conference, the manager replied "The championship, of course. We can have no other goal."</p>
+
+                <div class="section-marker">Development</div>
+
+                <p>Liverpool is fighting to close the point gap with the leader. The team has improved their form with four wins in their last five matches. The performance of the attacking line is giving fans hope. The star striker has scored 15 goals so far this season, making him one of the strongest candidates in the golden boot race.</p>
+
+                <p>Arsenal also continues to be an important player in the championship race. The team stands out with their defensive solidity. Having conceded only three goals in their last ten matches, Arsenal maintains the title of the league's least-conceding team with this statistic.</p>
+
+                <p>The matches to be played this weekend will directly affect the course of the championship race. With derby excitement added, football fans can expect an exciting weekend. Weather experts announced that rain is expected on match day, which could affect the teams' game plans.</p>
+
+                <div class="section-marker">Conclusion</div>
+
+                <p>Teams at the bottom of the league are fighting to avoid relegation. The point differences between the bottom three teams are also very close, indicating that the excitement will continue until the end of the season.</p>
+
+                <p>Sports writers agree that this season is one of the most competitive championship races in recent years. According to a newspaper poll, 40 percent of fans see Manchester City as champions, 35 percent Liverpool, and 20 percent Arsenal.</p>
+            </div>
+
+            <!-- Scroll Indicator -->
+            <div class="scroll-indicator">
+                <div class="scroll-dot active" id="dot1"></div>
+                <div class="scroll-dot" id="dot2"></div>
+                <div class="scroll-dot" id="dot3"></div>
+                <div class="scroll-dot" id="dot4"></div>
+                <div class="scroll-dot" id="dot5"></div>
+            </div>
+
+            <!-- Complete Button -->
+            <div class="complete-section">
+                <button class="complete-btn" onclick="completeReading()">✓ I've Finished Reading</button>
+            </div>
+        </article>
+    </main>
+
+    <!-- Motivation Popup -->
+    <div class="motivation-popup" id="motivationPopup"></div>
+
+    <script src="tracking.js"></script>
+    <script>
+        // Article content database
+        var articles = {
+            sports: {
+                category: 'SPORTS',
+                title: 'Championship Race Heats Up in Premier League: Critical Week Begins',
+                summary: [
+                    'Manchester City leads, Liverpool in pursuit',
+                    'Derby excitement awaits this weekend',
+                    'Championship race may continue until final weeks'
+                ],
+                content: `
+                    <div class="section-marker">Introduction</div>
+                    <p>The championship race in the Premier League is becoming more exciting each week. The point differences between the teams at the top of the league remain very close, creating great tension as we approach the final weeks of the season.</p>
+
+                    <p>Manchester City sits in the top spot with their consistent performance in recent weeks. The team has managed to stay ahead of their rivals, especially with victories in away matches. When asked "What is your goal?" at the press conference, the manager replied "The championship, of course. We can have no other goal."</p>
+
+                    <div class="section-marker">Development</div>
+
+                    <p>Liverpool is fighting to close the point gap with the leader. The team has improved their form with four wins in their last five matches. The performance of the attacking line is giving fans hope. The star striker has scored 15 goals so far this season, making him one of the strongest candidates in the golden boot race.</p>
+
+                    <p>Arsenal also continues to be an important player in the championship race. The team stands out with their defensive solidity. Having conceded only three goals in their last ten matches, Arsenal maintains the title of the league's least-conceding team with this statistic.</p>
+
+                    <p>The matches to be played this weekend will directly affect the course of the championship race. With derby excitement added, football fans can expect an exciting weekend. Weather experts announced that rain is expected on match day, which could affect the teams' game plans.</p>
+
+                    <div class="section-marker">Conclusion</div>
+
+                    <p>Teams at the bottom of the league are fighting to avoid relegation. The point differences between the bottom three teams are also very close, indicating that the excitement will continue until the end of the season.</p>
+
+                    <p>Sports writers agree that this season is one of the most competitive championship races in recent years. According to a newspaper poll, 40 percent of fans see Manchester City as champions, 35 percent Liverpool, and 20 percent Arsenal.</p>
+                `
+            },
+            technology: {
+                category: 'TECHNOLOGY',
+                title: 'How Will AI Technologies Change Our Lives in 2025?',
+                summary: [
+                    'AI diagnostic systems in healthcare achieved 94% accuracy',
+                    'Fundamental transformations expected in education and business',
+                    'EU AI regulation will come into force in 2025'
+                ],
+                content: `
+                    <div class="section-marker">Introduction</div>
+                    <p>Artificial intelligence technologies are becoming more present in every area of our lives in 2025. Experts predict that this year will be a turning point for AI, and fundamental changes are expected in many sectors.</p>
+
+                    <p>AI-powered diagnostic systems are becoming widespread in the healthcare sector. Particularly in image analysis, AI systems are helping doctors and playing an important role in early disease detection. According to research, AI-powered systems have achieved 94 percent accuracy in diagnosing certain types of cancer.</p>
+
+                    <div class="section-marker">Development</div>
+
+                    <p>Major transformations are also occurring in education. Personalized learning platforms offer content suited to each student's learning pace and style. ChatGPT and similar language models help students with homework and research, but this is also raising concerns about academic integrity.</p>
+
+                    <p>Automation is accelerating in the business world. While repetitive tasks are being taken over by AI, employees are expected to focus on more creative and strategic work. However, some experts warn that this situation could lead to the disappearance of certain professions.</p>
+
+                    <p>AI security and ethical use are also becoming important topics. The European Union's AI regulation will come into force in 2025, bringing strict rules on how companies develop and use AI systems.</p>
+
+                    <div class="section-marker">Conclusion</div>
+
+                    <p>AI investments are also increasing in the United States. Tech companies are developing projects especially in natural language processing and image recognition. The government announced its AI strategy for 2025 with a target of $10 billion in investment in this area.</p>
+
+                    <p>In conclusion, AI technologies will continue to be an integral part of our lives in 2025. The responsible and ethical use of these technologies is critically important for maximizing societal benefit.</p>
+                `
+            },
+            economy: {
+                category: 'ECONOMY',
+                title: 'Federal Reserve Announces Interest Rate Decision: Markets Remain Cautious',
+                summary: [
+                    'Policy interest rate kept at 5.25%',
+                    'Goal is for inflation to reach 2% target by end of 2025',
+                    'Gold could reach $2,200 by year-end'
+                ],
+                content: `
+                    <div class="section-marker">Introduction</div>
+                    <p>The Federal Reserve kept the policy interest rate unchanged at 5.25% at this month's Federal Open Market Committee meeting. While the decision largely aligned with market expectations, it was emphasized that the fight against inflation will continue.</p>
+
+                    <p>The Fed Chair, in his statement after the decision, said "The downward trend in inflation continues, but we will remain cautious to reach our targets." The Chair stated that the goal is for inflation to fall to the 2% target by the end of 2025.</p>
+
+                    <div class="section-marker">Development</div>
+
+                    <p>After the decision, the dollar index began trading at around 104 levels. Market analysts expect the index to move in the 103-105 range by year-end. However, geopolitical risks and uncertainties in the global economy could change these predictions.</p>
+
+                    <p>Business representatives stated that the high interest rate environment is negatively affecting companies' investment decisions. Small and medium enterprises particularly complain about high credit costs. The government announced it will reveal supportive measures on this issue.</p>
+
+                    <p>Interest rates continue to be decisive in the housing market. Mortgage rates remain above 7%, which has slowed home sales. Real estate sector representatives say it will be difficult for the market to revive without a rate cut.</p>
+
+                    <div class="section-marker">Conclusion</div>
+
+                    <p>Gold prices continue to rise due to economic uncertainties. With gold trading above $2,000 per ounce, investors continue to turn to gold as a safe haven. Experts predict gold could reach $2,200 by year-end.</p>
+
+                    <p>In conclusion, while the economic outlook remains uncertain, the Federal Reserve's tight monetary policy stance will continue. Markets will closely follow inflation data in the coming months and developments in the global economy.</p>
+                `
+            },
+            culture: {
+                category: 'CULTURE',
+                title: 'International Film Festival Kicks Off: This Year\'s Highlights',
+                summary: [
+                    'Over 200 films from more than 50 countries will be shown',
+                    'Festival theme is "Crossing Borders"',
+                    'Free screenings and student discounts available'
+                ],
+                content: `
+                    <div class="section-marker">Introduction</div>
+                    <p>The 44th International Film Festival opens its doors this year with a record number of films and events. The festival will be held from April 4-15 and will feature over 200 films from more than 50 countries.</p>
+
+                    <p>The festival director, while introducing this year's program, said "The cinema industry is recovering after the pandemic, and we are bringing the best examples of world cinema to this festival." The opening film will be the latest work from an award-winning director who won at Cannes.</p>
+
+                    <div class="section-marker">Development</div>
+
+                    <p>Independent cinema forms an important part of the festival this year. 15 new films from emerging directors will be featured in the festival's national competition section. The jury will be chaired by an internationally recognized filmmaker.</p>
+
+                    <p>Talks and masterclasses to be held during the festival are also generating great interest. Oscar-winning directors and producers will share their experiences with young filmmakers. Tickets sold out on the first day of online sales.</p>
+
+                    <p>This year's festival theme is "Crossing Borders." Films dealing with immigration, identity, and cultural diversity are prominent. The documentary section features productions focusing on climate change and environmental issues.</p>
+
+                    <div class="section-marker">Conclusion</div>
+
+                    <p>Historic theaters downtown will be the main venues of the festival. Screenings will be held in halls in different neighborhoods of the city, including the Grand Theater and the Art Cinema. Outdoor screenings are also on the program.</p>
+
+                    <p>The festival will also organize free screenings to bring cinema to wider audiences. Special discounted tickets for students and an animation selection for children strengthen the festival's social dimension.</p>
+                `
+            },
+            health: {
+                category: 'HEALTH',
+                title: '10 Ways to Boost Your Immune System During Winter',
+                summary: [
+                    'Vitamin C and D supplementation recommended',
+                    '150 minutes of exercise per week strengthens immunity',
+                    'Adults should sleep 7-9 hours per day'
+                ],
+                content: `
+                    <div class="section-marker">Introduction</div>
+                    <p>Winter months are when illnesses like the common cold and flu become widespread. Experts recommend taking certain precautions to strengthen the immune system. Here are ways to stay healthy during winter.</p>
+
+                    <p>Nutrition forms the foundation of the immune system. Consumption of citrus fruits, kiwi, and red peppers rich in vitamin C is recommended. Since vitamin D deficiency becomes common in winter months, supplement use should be considered. Experts recommend consuming at least 5 portions of fruits and vegetables daily.</p>
+
+                    <div class="section-marker">Development</div>
+
+                    <p>Regular exercise is one of the most important factors in strengthening the immune system. At least 150 minutes of moderate-intensity exercise per week is recommended. Yoga, pilates, or home exercises that can be done indoors are ideal options for winter months.</p>
+
+                    <p>Sleep quality is also critically important for immunity. Adults need 7-9 hours of sleep per day. Sleep irregularity negatively affects the function of immune cells and causes vulnerability to diseases.</p>
+
+                    <p>Stress management is a factor that should not be overlooked. Chronic stress weakens the immune system by raising cortisol levels. Meditation, deep breathing exercises, and hobby activities can help cope with stress.</p>
+
+                    <div class="section-marker">Conclusion</div>
+
+                    <p>Hand hygiene is one of the most effective methods for preventing the spread of infections. Wash your hands with soap for at least 20 seconds and use hand sanitizer. Wearing a mask in public transportation and crowded environments can also be protective.</p>
+
+                    <p>Finally, don't forget to drink plenty of water. Although the feeling of thirst decreases in winter months, the body's need for fluids continues. It is recommended to consume at least 8 glasses of water or herbal tea daily. Don't neglect to get your seasonal vaccinations after consulting your doctor.</p>
+                `
+            },
+            politics: {
+                category: 'POLITICS',
+                title: 'New Legislative Session Begins in Congress: Key Issues on the Agenda',
+                summary: [
+                    'Tax reform is one of the most important agenda items',
+                    'Digital literacy may become mandatory in education',
+                    '45 representatives applied to speak at the first session'
+                ],
+                content: `
+                    <div class="section-marker">Introduction</div>
+                    <p>A new legislative session is beginning in Congress. During this period, many important topics from economy to education, from healthcare to social policies will be on the agenda. Representatives are preparing for an intense work schedule.</p>
+
+                    <p>One of the most important agenda items of the new term will be tax reform. The administration has prepared a bill that envisions fundamental changes in the tax system. The bill includes restructuring income tax brackets and some changes in corporate tax.</p>
+
+                    <div class="section-marker">Development</div>
+
+                    <p>Important regulations are also expected in education. The Education Department's curriculum change proposal will come to the congressional agenda. The new curriculum aims to make digital literacy and artificial intelligence education mandatory.</p>
+
+                    <p>Changes to be made in the social security system are also on the agenda. New regulations regarding retirement age and premium days will be discussed. Opposition parties announced they will criticize the government on this issue and present alternative proposals.</p>
+
+                    <p>A bill proposing changes to local government laws is also among Congress's priority agenda items. This bill, which restructures the powers of mayors, contains controversial provisions. Changes are proposed regarding the boundaries and authorities of metropolitan municipalities.</p>
+
+                    <div class="section-marker">Conclusion</div>
+
+                    <p>Foreign policy issues will also occupy an important place on the congressional agenda. Relations with allied nations, agreements made with neighboring countries, and America's position in international organizations will be evaluated.</p>
+
+                    <p>The Speaker of the House, emphasizing the importance of reconciliation and dialogue in the new term, said "I believe we will have a productive legislative term that will meet the expectations of our nation." Forty-five representatives applied to speak at the first session.</p>
+                `
+            }
+        };
+
+        // Load the correct article based on selected topic
+        var selectedTopic = sessionStorage.getItem('selectedTopic') || 'sports';
+        var article = articles[selectedTopic] || articles.sports;
+
+        // Update page content
+        document.querySelector('.article-category').textContent = article.category;
+        document.querySelector('.article-title').textContent = article.title;
+        document.getElementById('articleBody').innerHTML = article.content;
+
+        // Update summary box
+        var summaryList = document.querySelector('.summary-list');
+        summaryList.innerHTML = article.summary.map(function(item) {
+            return '<li>' + item + '</li>';
+        }).join('');
+
+        // Store the topic for survey
+        sessionStorage.setItem('articleTopic', selectedTopic);
+
+        var startTime = Date.now();
+        var startTimeISO = new Date().toISOString();
+        var maxScroll = 0;
+        var focusModeActive = false;
+        var focusModeStartTime = null;
+        var totalFocusModeTime = 0;
+        var shownPopups = { 50: false, 75: false, 90: false };
+
+        // Timer
+        function updateTimer() {
+            var elapsed = Math.floor((Date.now() - startTime) / 1000);
+            var mins = Math.floor(elapsed / 60);
+            var secs = elapsed % 60;
+            document.getElementById('timer').textContent =
+                String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+        }
+        setInterval(updateTimer, 1000);
+
+        // Scroll tracking and progress
+        window.addEventListener('scroll', function() {
+            var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            var scrollPercent = Math.round((scrollTop / docHeight) * 100);
+
+            if (scrollPercent > maxScroll) {
+                maxScroll = scrollPercent;
+            }
+
+            // Update progress bar
+            document.getElementById('progressBar').style.width = scrollPercent + '%';
+            document.getElementById('progressText').textContent = '%' + scrollPercent;
+
+            // Update scroll dots
+            updateScrollDots(scrollPercent);
+
+            // Motivation popups
+            checkMotivationPopup(scrollPercent);
+        });
+
+        function updateScrollDots(percent) {
+            for (var i = 1; i <= 5; i++) {
+                var dot = document.getElementById('dot' + i);
+                var threshold = (i - 1) * 25;
+                if (percent >= threshold) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            }
+        }
+
+        function checkMotivationPopup(percent) {
+            var popup = document.getElementById('motivationPopup');
+
+            if (percent >= 50 && !shownPopups[50]) {
+                showPopup('Great progress! 🎉 You completed half');
+                shownPopups[50] = true;
+            } else if (percent >= 75 && !shownPopups[75]) {
+                showPopup('Almost done! 💪 You entered the final quarter');
+                shownPopups[75] = true;
+            } else if (percent >= 90 && !shownPopups[90]) {
+                showPopup('Just a few lines left! 🏁 Almost there');
+                shownPopups[90] = true;
+            }
+        }
+
+        function showPopup(message) {
+            var popup = document.getElementById('motivationPopup');
+            popup.textContent = message;
+            popup.classList.add('show');
+
+            setTimeout(function() {
+                popup.classList.remove('show');
+            }, 3000);
+        }
+
+        // Focus Mode
+        function toggleFocusMode() {
+            var overlay = document.getElementById('focusOverlay');
+            var btn = document.getElementById('focusBtn');
+            var btnText = document.getElementById('focusBtnText');
+
+            focusModeActive = !focusModeActive;
+
+            if (focusModeActive) {
+                document.body.classList.add('focus-mode');
+                overlay.classList.add('active');
+                btn.classList.add('active');
+                btnText.textContent = 'Exit Focus';
+                focusModeStartTime = Date.now();
+            } else {
+                document.body.classList.remove('focus-mode');
+                overlay.classList.remove('active');
+                btn.classList.remove('active');
+                btnText.textContent = 'Focus Mode';
+
+                if (focusModeStartTime) {
+                    totalFocusModeTime += Date.now() - focusModeStartTime;
+                    focusModeStartTime = null;
+                }
+            }
+        }
+
+        // Click overlay to exit focus mode
+        document.getElementById('focusOverlay').addEventListener('click', function() {
+            if (focusModeActive) {
+                toggleFocusMode();
+            }
+        });
+
+        // Text Size Control
+        var currentTextSize = 18;
+        function changeTextSize(delta) {
+            currentTextSize += delta;
+            if (currentTextSize < 14) currentTextSize = 14;
+            if (currentTextSize > 26) currentTextSize = 26;
+
+            var paragraphs = document.querySelectorAll('.article-body p');
+            paragraphs.forEach(function(p) {
+                p.style.fontSize = currentTextSize + 'px';
+            });
+        }
+
+        // Line Height Control
+        var currentLineHeight = 1.9;
+        function changeLineHeight(value) {
+            currentLineHeight = value;
+
+            var paragraphs = document.querySelectorAll('.article-body p');
+            paragraphs.forEach(function(p) {
+                p.style.lineHeight = currentLineHeight;
+            });
+
+            // Update active button
+            var buttons = document.querySelectorAll('.line-btn');
+            buttons.forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Complete reading
+        function completeReading() {
+            // Calculate final focus mode time
+            if (focusModeActive && focusModeStartTime) {
+                totalFocusModeTime += Date.now() - focusModeStartTime;
+            }
+
+            var readingTime = Math.floor((Date.now() - startTime) / 1000);
+            var focusTimeSec = Math.floor(totalFocusModeTime / 1000);
+
+            // Store session data
+            var sessionData = {
+                uiVersion: 'B',
+                articleId: selectedTopic,
+                articleTopic: article.category,
+                startTime: startTimeISO,
+                endTime: new Date().toISOString(),
+                readingTimeSec: readingTime,
+                maxScrollDepth: maxScroll,
+                distractionClicks: 0,
+                focusModeUsed: totalFocusModeTime > 0,
+                focusModeTimeSec: focusTimeSec,
+                completedAt: new Date().toISOString()
+            };
+
+            sessionStorage.setItem('lastSession', JSON.stringify(sessionData));
+            location.href = 'survey.html';
+        }
+    </script>
+</body>
+</html>
