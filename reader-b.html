@@ -312,6 +312,64 @@
             border-color: #28a745;
         }
 
+        /* Continue Reading Section - Minimal Design */
+        .continue-reading {
+            margin-top: 40px;
+            padding: 24px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .continue-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .continue-title::before {
+            content: '';
+            width: 4px;
+            height: 16px;
+            background: #28a745;
+            border-radius: 2px;
+        }
+
+        .continue-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .continue-card {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .continue-card:hover {
+            border-color: #28a745;
+            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.15);
+        }
+
+        .continue-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .continue-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+        }
+
         /* Complete Button */
         .complete-section {
             text-align: center;
@@ -491,6 +549,14 @@
                 <div class="scroll-dot" id="dot3"></div>
                 <div class="scroll-dot" id="dot4"></div>
                 <div class="scroll-dot" id="dot5"></div>
+            </div>
+
+            <!-- Continue Reading - Minimal Design -->
+            <div class="continue-reading">
+                <h3 class="continue-title">Continue Reading</h3>
+                <div class="continue-grid" id="continueGrid">
+                    <!-- Dynamically populated -->
+                </div>
             </div>
 
             <!-- Complete Button -->
@@ -842,6 +908,71 @@
             event.target.classList.add('active');
         }
 
+        // Related articles data for Continue Reading
+        var continueArticles = {
+            sports: { icon: '⚽', name: 'Sports' },
+            technology: { icon: '💻', name: 'Technology' },
+            economy: { icon: '📈', name: 'Economy' },
+            culture: { icon: '🎭', name: 'Culture' },
+            health: { icon: '🏥', name: 'Health' },
+            politics: { icon: '🏛️', name: 'Politics' }
+        };
+
+        // Populate Continue Reading grid (excluding current topic)
+        function populateContinueGrid() {
+            var grid = document.getElementById('continueGrid');
+            var topics = Object.keys(continueArticles).filter(function(t) { return t !== selectedTopic; });
+            var html = '';
+            for (var i = 0; i < 3 && i < topics.length; i++) {
+                var t = topics[i];
+                var data = continueArticles[t];
+                html += '<div class="continue-card" onclick="openRelatedArticle(\'' + t + '\')">' +
+                    '<div class="continue-icon">' + data.icon + '</div>' +
+                    '<div class="continue-name">' + data.name + '</div>' +
+                '</div>';
+            }
+            grid.innerHTML = html;
+        }
+        populateContinueGrid();
+
+        // Open related article (save current data first)
+        function openRelatedArticle(topic) {
+            // Calculate final focus mode time
+            if (focusModeActive && focusModeStartTime) {
+                totalFocusModeTime += Date.now() - focusModeStartTime;
+            }
+
+            var readingTime = Math.floor((Date.now() - startTime) / 1000);
+            var focusTimeSec = Math.floor(totalFocusModeTime / 1000);
+            var articleReadOrder = parseInt(sessionStorage.getItem('articleReadOrder') || '0') + 1;
+
+            var sessionData = {
+                uiVersion: 'B',
+                articleId: selectedTopic,
+                articleTopic: article.category,
+                startTime: startTimeISO,
+                endTime: new Date().toISOString(),
+                readingTimeSec: readingTime,
+                maxScrollDepth: maxScroll,
+                distractionClicks: 0,
+                focusModeUsed: totalFocusModeTime > 0,
+                focusModeTimeSec: focusTimeSec,
+                articleReadOrder: articleReadOrder,
+                completedVia: 'switched_article',
+                completedAt: new Date().toISOString()
+            };
+
+            // Save to Firebase
+            if (typeof saveResult === 'function') {
+                saveResult(sessionData);
+            }
+
+            // Update order counter and switch to new article
+            sessionStorage.setItem('articleReadOrder', articleReadOrder);
+            sessionStorage.setItem('selectedTopic', topic);
+            location.reload();
+        }
+
         // Complete reading
         function completeReading() {
             // Calculate final focus mode time
@@ -851,6 +982,7 @@
 
             var readingTime = Math.floor((Date.now() - startTime) / 1000);
             var focusTimeSec = Math.floor(totalFocusModeTime / 1000);
+            var articleReadOrder = parseInt(sessionStorage.getItem('articleReadOrder') || '0') + 1;
 
             // Store session data
             var sessionData = {
@@ -864,10 +996,13 @@
                 distractionClicks: 0,
                 focusModeUsed: totalFocusModeTime > 0,
                 focusModeTimeSec: focusTimeSec,
+                articleReadOrder: articleReadOrder,
+                completedVia: 'finished_button',
                 completedAt: new Date().toISOString()
             };
 
             sessionStorage.setItem('lastSession', JSON.stringify(sessionData));
+            sessionStorage.setItem('articleReadOrder', '0'); // Reset for next scenario
             location.href = 'survey.html';
         }
     </script>
