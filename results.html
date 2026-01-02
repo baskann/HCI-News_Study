@@ -287,6 +287,14 @@
             </div>
         </div>
 
+        <!-- Instructor Metrics Section -->
+        <div class="demographics-section">
+            <h2 class="section-header">Engagement Metrics (Instructor Requirements)</h2>
+            <div class="charts-section" id="engagementCharts">
+                <!-- Will be filled by JS -->
+            </div>
+        </div>
+
         <!-- visual comparison -->
         <div class="result-card">
             <h3>Reading Time Comparison</h3>
@@ -381,6 +389,9 @@
 
             // display demographics charts
             displayDemographicsCharts(allResults);
+
+            // display engagement metrics (instructor requirements)
+            displayEngagementCharts(allResults);
 
             // display chart
             displayChart(stats);
@@ -552,6 +563,130 @@
                 { name: 'Incorrect', value: uiBIncorrect }
             ];
             html += createChartCard('UI-B Comprehension', uiBCompData, chartColors.comprehension, 'Answers');
+
+            container.innerHTML = html;
+        }
+
+        // Display engagement metrics charts (instructor requirements)
+        function displayEngagementCharts(results) {
+            var container = document.getElementById('engagementCharts');
+
+            if (results.length === 0) {
+                container.innerHTML = '<p class="no-data">No engagement data available</p>';
+                return;
+            }
+
+            var uiAResults = results.filter(function(r) { return r.uiVersion === 'A'; });
+            var uiBResults = results.filter(function(r) { return r.uiVersion === 'B'; });
+
+            var html = '';
+
+            // Calculate averages for Time to First Article Click
+            function calcAvg(arr, field) {
+                var validItems = arr.filter(function(r) { return r[field] !== undefined && r[field] !== null && !isNaN(r[field]); });
+                if (validItems.length === 0) return 0;
+                var sum = validItems.reduce(function(acc, r) { return acc + parseFloat(r[field]); }, 0);
+                return Math.round(sum / validItems.length * 10) / 10;
+            }
+
+            var avgClickTimeA = calcAvg(uiAResults, 'timeToFirstArticleClickSec');
+            var avgClickTimeB = calcAvg(uiBResults, 'timeToFirstArticleClickSec');
+            var avgWillingnessA = calcAvg(uiAResults, 'willingnessToClick');
+            var avgWillingnessB = calcAvg(uiBResults, 'willingnessToClick');
+
+            // Time to First Article Click comparison
+            html += `
+                <div class="chart-card">
+                    <h3 class="chart-title">Time to First Article Click</h3>
+                    <div class="bar-chart" style="height: 180px; margin: 0;">
+                        <div class="bar-wrapper">
+                            <div class="bar ui-a" style="height: ${Math.min(avgClickTimeA * 10, 120)}px;"></div>
+                            <span class="bar-label">UI-A</span>
+                            <span>${avgClickTimeA}s</span>
+                        </div>
+                        <div class="bar-wrapper">
+                            <div class="bar ui-b" style="height: ${Math.min(avgClickTimeB * 10, 120)}px;"></div>
+                            <span class="bar-label">UI-B</span>
+                            <span>${avgClickTimeB}s</span>
+                        </div>
+                    </div>
+                    <p style="text-align: center; color: #666; font-size: 13px; margin-top: 12px;">
+                        Average time from feed load to first article click
+                    </p>
+                </div>
+            `;
+
+            // Willingness to Click comparison (bar chart style)
+            html += `
+                <div class="chart-card">
+                    <h3 class="chart-title">Willingness to Click Articles</h3>
+                    <div class="bar-chart" style="height: 180px; margin: 0;">
+                        <div class="bar-wrapper">
+                            <div class="bar ui-a" style="height: ${avgWillingnessA * 17}px;"></div>
+                            <span class="bar-label">UI-A</span>
+                            <span>${avgWillingnessA}/7</span>
+                        </div>
+                        <div class="bar-wrapper">
+                            <div class="bar ui-b" style="height: ${avgWillingnessB * 17}px;"></div>
+                            <span class="bar-label">UI-B</span>
+                            <span>${avgWillingnessB}/7</span>
+                        </div>
+                    </div>
+                    <p style="text-align: center; color: #666; font-size: 13px; margin-top: 12px;">
+                        "This interface encouraged me to click on articles" (1-7 scale)
+                    </p>
+                </div>
+            `;
+
+            // Focus Rating comparison
+            var avgFocusA = calcAvg(uiAResults, 'perceivedFocus');
+            var avgFocusB = calcAvg(uiBResults, 'perceivedFocus');
+
+            html += `
+                <div class="chart-card">
+                    <h3 class="chart-title">Perceived Focus</h3>
+                    <div class="bar-chart" style="height: 180px; margin: 0;">
+                        <div class="bar-wrapper">
+                            <div class="bar ui-a" style="height: ${avgFocusA * 17}px;"></div>
+                            <span class="bar-label">UI-A</span>
+                            <span>${avgFocusA}/7</span>
+                        </div>
+                        <div class="bar-wrapper">
+                            <div class="bar ui-b" style="height: ${avgFocusB * 17}px;"></div>
+                            <span class="bar-label">UI-B</span>
+                            <span>${avgFocusB}/7</span>
+                        </div>
+                    </div>
+                    <p style="text-align: center; color: #666; font-size: 13px; margin-top: 12px;">
+                        "How well were you able to focus while reading?" (1-7 scale)
+                    </p>
+                </div>
+            `;
+
+            // Readability Rating comparison
+            var avgReadA = calcAvg(uiAResults, 'perceivedReadability');
+            var avgReadB = calcAvg(uiBResults, 'perceivedReadability');
+
+            html += `
+                <div class="chart-card">
+                    <h3 class="chart-title">Perceived Readability</h3>
+                    <div class="bar-chart" style="height: 180px; margin: 0;">
+                        <div class="bar-wrapper">
+                            <div class="bar ui-a" style="height: ${avgReadA * 17}px;"></div>
+                            <span class="bar-label">UI-A</span>
+                            <span>${avgReadA}/7</span>
+                        </div>
+                        <div class="bar-wrapper">
+                            <div class="bar ui-b" style="height: ${avgReadB * 17}px;"></div>
+                            <span class="bar-label">UI-B</span>
+                            <span>${avgReadB}/7</span>
+                        </div>
+                    </div>
+                    <p style="text-align: center; color: #666; font-size: 13px; margin-top: 12px;">
+                        "How easy was it to read the text?" (1-7 scale)
+                    </p>
+                </div>
+            `;
 
             container.innerHTML = html;
         }
@@ -809,7 +944,7 @@
                 return;
             }
 
-            var headers = ['participantId', 'gender', 'ageGroup', 'department', 'occupation', 'uiVersion', 'articleId', 'articleTopic', 'readingTimeSec', 'maxScrollDepth', 'distractionClicks', 'focusModeUsed', 'focusModeTimeSec', 'comprehensionScore', 'perceivedFocus', 'perceivedReadability', 'completedAt'];
+            var headers = ['participantId', 'gender', 'ageGroup', 'department', 'occupation', 'uiVersion', 'articleId', 'articleTopic', 'readingTimeSec', 'maxScrollDepth', 'distractionClicks', 'focusModeUsed', 'focusModeTimeSec', 'timeToFirstArticleClickSec', 'articleReadOrder', 'comprehensionScore', 'perceivedFocus', 'perceivedReadability', 'willingnessToClick', 'completedAt'];
             var csvLines = [];
             csvLines.push(headers.join(','));
 

@@ -431,14 +431,29 @@
 
         // Track feed interactions
         var feedStartTime = Date.now();
+        var feedLoadedTime = Date.now();
+        var firstArticleClicked = false;
+
+        // Store feed loaded time for timeToFirstArticleClick calculation
+        sessionStorage.setItem('feedLoadedTime', feedLoadedTime);
 
         function openArticle(topic) {
             var feedTime = Date.now() - feedStartTime;
+
+            // Calculate time to first article click (only for the first click)
+            if (!firstArticleClicked) {
+                var timeToFirstClick = Math.round((Date.now() - feedLoadedTime) / 1000 * 10) / 10; // seconds with 1 decimal
+                sessionStorage.setItem('timeToFirstArticleClickSec', timeToFirstClick);
+                firstArticleClicked = true;
+            }
 
             // Store feed metrics
             sessionStorage.setItem('feedTimeMs', feedTime);
             sessionStorage.setItem('selectedTopic', topic);
             sessionStorage.setItem('distractionClicks', '0'); // No distractions in UI-B
+
+            // Reset article read order for new scenario
+            sessionStorage.setItem('articleReadOrder', '0');
 
             // Go to article reader
             location.href = 'reader-b.html';

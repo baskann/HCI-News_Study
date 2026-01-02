@@ -339,6 +339,48 @@
                 </div>
             </div>
 
+            <!-- Likert: Willingness to Click (Instructor Metric) -->
+            <div class="question-section">
+                <span class="question-number">4</span>
+                <p class="question-text">This interface encouraged me to click on articles</p>
+                <div class="likert-container">
+                    <div class="likert-labels">
+                        <span>Strongly disagree</span>
+                        <span>Strongly agree</span>
+                    </div>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" name="willingness" id="will1" value="1" required>
+                            <label for="will1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="willingness" id="will2" value="2">
+                            <label for="will2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="willingness" id="will3" value="3">
+                            <label for="will3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="willingness" id="will4" value="4">
+                            <label for="will4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="willingness" id="will5" value="5">
+                            <label for="will5">5</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="willingness" id="will6" value="6">
+                            <label for="will6">6</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="willingness" id="will7" value="7">
+                            <label for="will7">7</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <button type="submit" class="submit-btn">Submit</button>
         </form>
     </div>
@@ -441,6 +483,11 @@
             var mcqAnswer = formData.get('mcq');
             var focusRating = parseInt(formData.get('focus'));
             var readabilityRating = parseInt(formData.get('readability'));
+            var willingnessRating = parseInt(formData.get('willingness'));
+
+            // Get additional metrics from sessionStorage
+            var timeToFirstClick = parseFloat(sessionStorage.getItem('timeToFirstArticleClickSec') || '0');
+            var articleReadOrder = parseInt(lastSession.articleReadOrder || sessionStorage.getItem('articleReadOrder') || '1');
 
             // Combine all data including demographics
             var sessionRecord = {
@@ -465,9 +512,14 @@
                 focusModeTimeSec: lastSession.focusModeTimeSec || 0,
                 startTime: lastSession.startTime || null,
                 endTime: lastSession.endTime || null,
+                // New metrics (instructor requirements)
+                timeToFirstArticleClickSec: timeToFirstClick,
+                articleReadOrder: articleReadOrder,
+                // Survey responses
                 comprehensionScore: mcqAnswer === 'correct' ? 1 : 0,
                 perceivedFocus: focusRating,
                 perceivedReadability: readabilityRating,
+                willingnessToClick: willingnessRating,
                 completedAt: new Date().toISOString()
             };
 

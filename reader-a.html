@@ -373,19 +373,8 @@
             <!-- Related Articles -->
             <div class="related-section">
                 <h3 class="related-title">Related News</h3>
-                <div class="related-grid">
-                    <div class="related-card" onclick="trackDistraction()">
-                        <div class="related-card-image">⚽</div>
-                        <div class="related-card-title">Transfer window heating up: Who's coming to the Premier League?</div>
-                    </div>
-                    <div class="related-card" onclick="trackDistraction()">
-                        <div class="related-card-image">🏆</div>
-                        <div class="related-card-title">English teams' status in European competitions</div>
-                    </div>
-                    <div class="related-card" onclick="trackDistraction()">
-                        <div class="related-card-image">📊</div>
-                        <div class="related-card-title">Team of the Season announced</div>
-                    </div>
+                <div class="related-grid" id="relatedGrid">
+                    <!-- Dynamically populated -->
                 </div>
             </div>
 
@@ -395,21 +384,21 @@
             </div>
         </article>
 
-        <!-- Sidebar - DISTRACTIONS -->
+        <!-- Sidebar - DISTRACTIONS (now clickable) -->
         <aside class="sidebar">
             <div class="sidebar-widget">
                 <h3 class="widget-title">Trending News</h3>
-                <div class="trending-item" onclick="trackDistraction()">
+                <div class="trending-item" onclick="openRelatedArticle('technology')">
                     <span class="trending-number">1</span>
-                    <span class="trending-text">Breaking transfer news!</span>
+                    <span class="trending-text">How AI is transforming healthcare in 2025</span>
                 </div>
-                <div class="trending-item" onclick="trackDistraction()">
+                <div class="trending-item" onclick="openRelatedArticle('economy')">
                     <span class="trending-number">2</span>
-                    <span class="trending-text">Manager resigns from position</span>
+                    <span class="trending-text">Federal Reserve holds interest rates steady</span>
                 </div>
-                <div class="trending-item" onclick="trackDistraction()">
+                <div class="trending-item" onclick="openRelatedArticle('health')">
                     <span class="trending-number">3</span>
-                    <span class="trending-text">Injury shock for star player</span>
+                    <span class="trending-text">10 ways to boost your immune system</span>
                 </div>
             </div>
 
@@ -423,13 +412,13 @@
 
             <div class="sidebar-widget">
                 <h3 class="widget-title">Most Read</h3>
-                <div class="trending-item" onclick="trackDistraction()">
+                <div class="trending-item" onclick="openRelatedArticle('culture')">
                     <span class="trending-number">1</span>
-                    <span class="trending-text">Star player dropped from squad</span>
+                    <span class="trending-text">International Film Festival kicks off</span>
                 </div>
-                <div class="trending-item" onclick="trackDistraction()">
+                <div class="trending-item" onclick="openRelatedArticle('politics')">
                     <span class="trending-number">2</span>
-                    <span class="trending-text">Ticket prices announced</span>
+                    <span class="trending-text">New legislative session begins in Congress</span>
                 </div>
             </div>
         </aside>
@@ -617,9 +606,73 @@
             sessionStorage.setItem('distractionClicks', distractionClicks);
         }
 
+        // Related articles data (excluding current topic)
+        var relatedArticlesData = {
+            sports: { icon: '⚽', title: 'Championship race heats up in Premier League' },
+            technology: { icon: '🤖', title: 'How AI technologies will change our lives in 2025' },
+            economy: { icon: '💰', title: 'Federal Reserve announces interest rate decision' },
+            culture: { icon: '🎬', title: 'International Film Festival kicks off' },
+            health: { icon: '🏥', title: '10 ways to boost your immune system' },
+            politics: { icon: '🏛️', title: 'New legislative session begins in Congress' }
+        };
+
+        // Populate related articles (excluding current topic)
+        function populateRelatedArticles() {
+            var grid = document.getElementById('relatedGrid');
+            var topics = Object.keys(relatedArticlesData).filter(function(t) { return t !== selectedTopic; });
+            var html = '';
+            for (var i = 0; i < 3 && i < topics.length; i++) {
+                var t = topics[i];
+                var data = relatedArticlesData[t];
+                html += '<div class="related-card" onclick="openRelatedArticle(\'' + t + '\')">' +
+                    '<div class="related-card-image">' + data.icon + '</div>' +
+                    '<div class="related-card-title">' + data.title + '</div>' +
+                '</div>';
+            }
+            grid.innerHTML = html;
+        }
+        populateRelatedArticles();
+
+        // Open related article (save current data first)
+        function openRelatedArticle(topic) {
+            trackDistraction();
+
+            // Save current reading progress before switching
+            var readingTime = Math.floor((Date.now() - startTime) / 1000);
+            var articleReadOrder = parseInt(sessionStorage.getItem('articleReadOrder') || '0') + 1;
+
+            var sessionData = {
+                uiVersion: 'A',
+                articleId: selectedTopic,
+                articleTopic: article.category,
+                startTime: startTimeISO,
+                endTime: new Date().toISOString(),
+                readingTimeSec: readingTime,
+                maxScrollDepth: maxScroll,
+                distractionClicks: distractionClicks,
+                focusModeUsed: false,
+                focusModeTimeSec: 0,
+                articleReadOrder: articleReadOrder,
+                completedVia: 'switched_article',
+                completedAt: new Date().toISOString()
+            };
+
+            // Save to Firebase
+            if (typeof saveResult === 'function') {
+                saveResult(sessionData);
+            }
+
+            // Update order counter and switch to new article
+            sessionStorage.setItem('articleReadOrder', articleReadOrder);
+            sessionStorage.setItem('selectedTopic', topic);
+            sessionStorage.setItem('distractionClicks', '0'); // Reset for new article
+            location.reload();
+        }
+
         // Complete reading
         function completeReading() {
             var readingTime = Math.floor((Date.now() - startTime) / 1000);
+            var articleReadOrder = parseInt(sessionStorage.getItem('articleReadOrder') || '0') + 1;
 
             // Store session data
             var sessionData = {
@@ -633,10 +686,13 @@
                 distractionClicks: distractionClicks,
                 focusModeUsed: false,
                 focusModeTimeSec: 0,
+                articleReadOrder: articleReadOrder,
+                completedVia: 'finished_button',
                 completedAt: new Date().toISOString()
             };
 
             sessionStorage.setItem('lastSession', JSON.stringify(sessionData));
+            sessionStorage.setItem('articleReadOrder', '0'); // Reset for next scenario
             location.href = 'survey.html';
         }
     </script>
