@@ -1,6 +1,10 @@
 # HCI News Reading Study
 
-A web-based A/B testing platform for comparing two news website UI designs and their effects on user reading behavior.
+## About
+
+This project is a **Human-Computer Interaction (HCI)** research study developed for the **CS449/549 HCI course**. The goal is to investigate how user interface design affects reading behavior and comprehension on news websites.
+
+The study uses an **A/B testing methodology** to compare two different UI approaches: a traditional cluttered design versus a focus-optimized design that applies HCI principles to reduce cognitive load and improve user experience.
 
 ## Purpose
 
@@ -11,16 +15,25 @@ This study investigates how different UI design approaches affect:
 - **Perceived focus** - How focused users feel while reading
 - **Distraction clicks** - How often users click on non-article elements
 
+## HCI Principles Applied
+
+The study tests several key HCI concepts:
+- **Cognitive Load Theory** - Reducing visual clutter to improve focus
+- **Hick's Law** - Limiting choices to reduce decision time
+- **Progressive Disclosure** - Showing information only when needed
+- **Visual Hierarchy** - Guiding attention through design
+- **Feedback & Affordances** - Progress indicators and clear controls
+
 ## UI Designs Compared
 
-### UI-A: Classic Design
+### UI-A: Classic Design (Control)
 - Traditional news website layout with sidebar
 - Advertisements (inline and sidebar)
 - Related articles section
 - Trending news widgets
 - Multiple visual distractions
 
-### UI-B: Focus Frame Design
+### UI-B: Focus Frame Design (Treatment)
 Applies HCI principles to reduce cognitive load:
 - **Single-column layout** - No sidebar distractions
 - **Progress indicator** - Shows reading progress
